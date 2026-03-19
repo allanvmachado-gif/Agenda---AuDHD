@@ -23,12 +23,20 @@ jobs:
         with:
           flutter-version: '3.19.6'
           channel: 'stable'
+          cache: true
+
+      - name: Criar local.properties
+        run: |
+          FLUTTER_PATH=$(dirname $(dirname $(which flutter)))
+          echo "flutter.sdk=$FLUTTER_PATH" > android/local.properties
+          echo "sdk.dir=$ANDROID_HOME" >> android/local.properties
+          cat android/local.properties
 
       - name: Get dependencies
         run: flutter pub get
 
       - name: Build APK (release)
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
